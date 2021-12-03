@@ -5,7 +5,7 @@ var campos = [
     document.querySelector('#quantidade'),
 ]
 
-// Mostra que os campos do formulário foram capturados
+// Verifica o conteúdo do Array
 console.log(campos)
 
 // Seleciona a tabela com classe css correspondente ao id
@@ -34,4 +34,12 @@ document.querySelector('.form').addEventListener('submit', (evento) => {
     tr.appendChild(tdVolume)
     // adiciona a tr na table
     tbody.appendChild(tr)
+    // Limpa o campo data
+    campos[0].value = ''
+    // Limpa o campo quantidade
+    campos[1].value = 1
+    // Limpa o campo valor
+    campos[2].value = 0
+    // Foca no campo da data
+    campos[0].focus()
 })
