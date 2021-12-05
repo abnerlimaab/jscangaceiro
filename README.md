@@ -63,3 +63,19 @@ class Negociacao {
     }
 }
 ```
+
+Para melhorar a legibilidade, toda propriedade que precisa de alteração antes de ser atribuida não terá o auxilio de Object.assign()
+
+```javascript
+class Negociacao {
+
+    constructor(_data, _quantidade, _valor) {
+        Object.assign(this, {
+            _quantidade,
+            _valor
+        })
+        this._data = new Date(data.getTime())
+        Object.freeze(this)
+    }
+}
+```
