@@ -10,11 +10,20 @@ class NegociacaoController {
 
     adiciona(event) {
         event.preventDefault()
-        alert('Chamei ação no controller')
+        
+        let converter = new DataConverter()
 
-        console.log(this._inputData.value)
-        console.log(this._inputQuantidade.value)
-        console.log(this._inputValor.value)
+        let data = converter.paraData(this._inputData.value)
+
+        let negociacao = new Negociacao(
+            data,
+            parseInt(this._inputQuantidade.value),
+            parseFloat(this._inputValor.value)
+        )
+
+        let diaMesAno = converter.paraTexto(negociacao.data)
+
+        console.log(diaMesAno)
     }
 
 }
