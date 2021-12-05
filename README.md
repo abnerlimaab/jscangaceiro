@@ -22,3 +22,26 @@ class Negociacao {
     }
 }
 ```
+
+### Programação defensiva
+
+No momento da criação do design de classes, seja cuidadoso com a mutabilidade. Quando congelamos o objeto, não permitimos que sejam atribuidos novos valores as suas propriedades, mas as referências ainda podem ser alteradas por métodos.
+Neste exemplo, realizamos a blindagem do atributo data no construtor e no get.
+
+```javascript
+class Negociacao {
+
+    constructor(data, quantidade, valor) {
+        //Criamos uma nova referencia para a data que será salva no objeto
+        this._data = new Date(data.getTime())
+        this._quantidade = quantidade
+        this._valor = valor
+        Object.freeze(this)
+    }
+
+    get data() {
+        //Passamos uma cópia de data
+        return new Date(this._data.getTime())
+    }
+}
+```
