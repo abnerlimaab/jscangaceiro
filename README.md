@@ -79,3 +79,11 @@ class Negociacao {
     }
 }
 ```
+
+### Definindo alias e alterando o contexto de uma função com bind()
+
+Neste exemplo, atribuimos a função document.querySelector() na variável $. Após a atribuição, o contexto this de querySelector não será mais document e resultará em erro. Para resolvermos, utilizamos o bind() (disponível em todas as funções javascript) para alterar o contexto this de $ para document o que a torna um alias de document.querySelector;
+
+```javascript
+let $ = document.querySelector.bind(document)
+```
