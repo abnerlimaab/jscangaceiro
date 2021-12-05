@@ -45,3 +45,21 @@ class Negociacao {
     }
 }
 ```
+
+### Menos verbosidade no constructor com Object.assign()
+
+Simplificamos a atribuição das propriedades do objeto que antes era realizada em três instruções para apenas uma.
+
+```javascript
+class Negociacao {
+
+    constructor(data, quantidade, valor) {
+        Object.assign(this, {
+            _data: new Date(data.getTime()),
+            _quantidade: quantidade,
+            _valor: valor
+        })
+        Object.freeze(this)
+    }
+}
+```
