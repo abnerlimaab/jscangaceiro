@@ -113,3 +113,19 @@ class DataConverter {
 
 }
 ```
+
+### Boa prática do Fail Fast
+
+O Fail Fast consiste em validar os parâmetros recebidos antes de executar a lógica do método e falharmos antecipadamente quando divergir do esperado passando uma mensagem clara.
+
+```javascript
+class DataConverter {
+    static paraData(texto) {
+        //Este método espera receber uma string no formato aaaa-mm-dd, caso NÃO venha neste formato será passado um erro.
+        if (!/^\d(4)-\d(2)-\d(2)$/.test(texto)) throw new Error('A data deve estar no formato aaaa-mm-dd')
+        return new Date(...texto.split('-').map(
+            (item, indice) => item - indice % 2
+        ))
+    }
+}
+```
