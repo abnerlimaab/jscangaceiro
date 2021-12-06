@@ -87,3 +87,29 @@ Neste exemplo, atribuimos a função document.querySelector() na variável $. Ap
 ```javascript
 let $ = document.querySelector.bind(document)
 ```
+
+### Métodos estáticos
+
+Os métodos da classe DataConverter não dependem de atributos da instância para seu código funcionar de forma que não é necessário criar uma instância para utilizá-los. Para definir um método estático basta adicionar a palavra reservada static na sua assinatura. Quando a classe possui apenas métodos estáticos, é boa prática passar um Error no construtor para impedir a criação de objetos.
+
+```javascript
+class DataConverter {
+
+    constructor() {
+        throw new Error('Essa classe não pode ser instanciada')
+    }
+    
+    static paraTexto(data) {
+        return data.getDate() 
+            + '/' + (data.getMonth() + 1)
+            + '/' + data.getFullYear()
+    }
+
+    static paraData(texto) {
+        return new Date(...texto.split('-').map(
+            (item, indice) => item - indice % 2
+        ))
+    }
+
+}
+```

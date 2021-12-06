@@ -1,12 +1,16 @@
 class DataConverter {
+
+    constructor() {
+        throw new Error('Essa classe não pode ser instanciada')
+    }
     
-    paraTexto(data) {
+    static paraTexto(data) {
         return data.getDate() 
             + '/' + (data.getMonth() + 1)
             + '/' + data.getFullYear()
     }
 
-    paraData(texto) {
+    static paraData(texto) {
         return new Date(...texto.split('-').map(
             (item, indice) => item - indice % 2
         ))
