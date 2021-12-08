@@ -21,7 +21,7 @@ class Negociacao {
         return this._quantidade
     }
 
-    get vakor() {
+    get valor() {
         return this._valor
     }
 }
