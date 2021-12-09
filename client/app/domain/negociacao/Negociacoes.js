@@ -12,4 +12,10 @@ class Negociacoes {
         return [].concat(this._negociacoes)
     }
 
+    get volumeTotal() {
+        let total = 0
+        this._negociacoes.forEach(negociacao => total += negociacao.volume)
+        return total
+    }
+
 }
