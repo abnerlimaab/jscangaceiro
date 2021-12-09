@@ -13,9 +13,7 @@ class Negociacoes {
     }
 
     get volumeTotal() {
-        let total = 0
-        this._negociacoes.forEach(negociacao => total += negociacao.volume)
-        return total
+        return this._negociacoes.reduce((total, negociacao) => total + negociacao.volume, 0)
     }
 
 }
