@@ -18,7 +18,7 @@ class Negociacoes {
     }
 
     esvaziar() {
-        this._negociacoes = []
+        this._negociacoes.length = 0
     }
 
 }
