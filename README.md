@@ -145,3 +145,34 @@ class Negociacoes {
   }
 }
 ```
+### Emulando Classes abstratas
+
+Podem ter um ou mais métodos abstratos que nada mais são do que métodos que não possuem implementação, apenas a assinatura. Esses métodos devem ser implementados pela classe filha. Em Javascript, passamos uma Exception no método da classe mãe para obrigar as filhas a implementá-lo, porém a exceção só é lançada em tempo de execução.
+
+```javascript
+//Classe Mãe
+class View {
+
+    template(model) {
+        throw new Error('Você precisa implementar o método template')
+    }
+
+}
+
+//Classe Filha
+class MensagemView extends View {
+
+    template(model) {
+        return model.texto 
+            ? `<p class="alert alert-info">${model.texto}</p>`
+            : `<p></p>`
+    }
+
+}
+```
+
+### Recomendações quanto a definição de variáveis.
+
+- Use const sempre que possível
+- Utilize let apenas se a variável precisar receber novas atribuições.
+- Não use var, pois só tem escopo definido quando declarada dentro de uma função.
