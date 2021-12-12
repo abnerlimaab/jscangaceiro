@@ -177,7 +177,7 @@ class MensagemView extends View {
 - Utilize let apenas se a variável precisar receber novas atribuições.
 - Não use var, pois só tem escopo definido quando declarada dentro de uma função.
 
-### Driblando o tjis dinâmico de function
+### Driblando o this dinâmico de function
 
 Objetivo: A função passada no construtor de Negociacoes deve considerar a instância de NegociacaoController.
 
@@ -229,6 +229,23 @@ class NegociacaoController {
         this._negociacoes = new Negociacoes(this, function(model) {
             console.log(this) // this = NegociacaoController
             this._negociacoesView.update(model) // this = NegociacaoController
+        })
+        //Código posterior omitido
+    }
+}
+```
+
+### Arrow functions e seu this léxico
+
+Em uma arrow function, o escopo do this é léxico (estático) e obtém seu valor do código ao redor.
+
+```javascript
+class NegociacaoController {
+    constructor() {
+        //Código anterior omitido
+        this._negociacoes = new Negociacoes(model => {
+            console.log(this) // this = NegociacaoController
+            this._negociacoesView.update(model) // model = Negociacoes
         })
         //Código posterior omitido
     }
