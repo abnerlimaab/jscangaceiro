@@ -61,10 +61,14 @@
                 console.log(`A propriedade ${prop} caiu na armadilha!`)
                 //Acessamos a propriedade do objeto encapsulado através de colchetes com uma string correspondente ao nome da propriedade.
                 return target[prop]
+            },
+            set(target, prop, value, receiver) {
+                console.log(`${prop} guarda ${target[prop]}, receberá ${value}`)
+                return target[prop] == value
             }
         })
-        console.log(negociacao.quantidade)
-        console.log(negociacao.valor)
+        negociacao._quantidade = 10
+        negociacao._valor = 100
     </script>
 </body>
 </html>
