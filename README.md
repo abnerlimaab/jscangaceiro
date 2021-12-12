@@ -145,6 +145,7 @@ class Negociacoes {
   }
 }
 ```
+
 ### Emulando Classes abstratas
 
 Podem ter um ou mais métodos abstratos que nada mais são do que métodos que não possuem implementação, apenas a assinatura. Esses métodos devem ser implementados pela classe filha. Em Javascript, passamos uma Exception no método da classe mãe para obrigar as filhas a implementá-lo, porém a exceção só é lançada em tempo de execução.
@@ -152,22 +153,18 @@ Podem ter um ou mais métodos abstratos que nada mais são do que métodos que n
 ```javascript
 //Classe Mãe
 class View {
-
-    template(model) {
-        throw new Error('Você precisa implementar o método template')
-    }
-
+  template(model) {
+    throw new Error("Você precisa implementar o método template");
+  }
 }
 
 //Classe Filha
 class MensagemView extends View {
-
-    template(model) {
-        return model.texto 
-            ? `<p class="alert alert-info">${model.texto}</p>`
-            : `<p></p>`
-    }
-
+  template(model) {
+    return model.texto
+      ? `<p class="alert alert-info">${model.texto}</p>`
+      : `<p></p>`;
+  }
 }
 ```
 
@@ -185,15 +182,15 @@ Objetivo: A função passada no construtor de Negociacoes deve considerar a inst
 
 ```javascript
 class NegociacaoController {
-    constructor() {
-        //Código anterior omitido
-        const self = this
-        this._negociacoes = new Negociacoes(function(model) {
-            console.log(this) // Instância de Negociacoes
-            self._negociacoesView.update(model) // Instância de NegociacaoController obtida através da variável auxiliar self
-        })
-        //Código posterior omitido
-    }
+  constructor() {
+    //Código anterior omitido
+    const self = this;
+    this._negociacoes = new Negociacoes(function (model) {
+      console.log(this); // Instância de Negociacoes
+      self._negociacoesView.update(model); // Instância de NegociacaoController obtida através da variável auxiliar self
+    });
+    //Código posterior omitido
+  }
 }
 ```
 
@@ -203,20 +200,19 @@ Na classe Negociacoes
 
 ```javascript
 class Negociacoes {
+  // contexto = NegociacaoController, armadilha = function
+  constructor(contexto, armadilha) {
+    this._negociacoes = [];
+    this._armadilha = armadilha;
+    this._contexto = contexto;
+    Object.freeze(this);
+  }
 
-    // contexto = NegociacaoController, armadilha = function
-    constructor(contexto, armadilha) {
-        this._negociacoes = []
-        this._armadilha = armadilha
-        this._contexto = contexto
-        Object.freeze(this)
-    }
-
-    adiciona(negociacao) {
-        this._negociacoes.push(negociacao)
-        // A function armadilha terá MegociacaoController como contexto e Negociacoes como parâmetro
-        this._armadilha.call(this._contexto, this)
-    }
+  adiciona(negociacao) {
+    this._negociacoes.push(negociacao);
+    // A function armadilha terá MegociacaoController como contexto e Negociacoes como parâmetro
+    this._armadilha.call(this._contexto, this);
+  }
 }
 ```
 
@@ -224,14 +220,14 @@ Na classe NegociacaoController atrinuimos o this no primeiro parâmetro do const
 
 ```javascript
 class NegociacaoController {
-    constructor() {
-        //Código anterior omitido
-        this._negociacoes = new Negociacoes(this, function(model) {
-            console.log(this) // this = NegociacaoController
-            this._negociacoesView.update(model) // this = NegociacaoController
-        })
-        //Código posterior omitido
-    }
+  constructor() {
+    //Código anterior omitido
+    this._negociacoes = new Negociacoes(this, function (model) {
+      console.log(this); // this = NegociacaoController
+      this._negociacoesView.update(model); // this = NegociacaoController
+    });
+    //Código posterior omitido
+  }
 }
 ```
 
@@ -241,13 +237,28 @@ Em uma arrow function, o escopo do this é léxico (estático) e obtém seu valo
 
 ```javascript
 class NegociacaoController {
-    constructor() {
-        //Código anterior omitido
-        this._negociacoes = new Negociacoes(model => {
-            console.log(this) // this = NegociacaoController
-            this._negociacoesView.update(model) // model = Negociacoes
-        })
-        //Código posterior omitido
-    }
+  constructor() {
+    //Código anterior omitido
+    this._negociacoes = new Negociacoes((model) => {
+      console.log(this); // this = NegociacaoController
+      this._negociacoesView.update(model); // model = Negociacoes
+    });
+    //Código posterior omitido
+  }
 }
+```
+
+### O padrão de projeto PROXY
+
+Lidamos com Proxy como se ele fosse a instância do objeto que estamos querendo manipular. Para cada propriedade e método dessa instância o Proxy terá um correspondente. O ES6 já possui na própria linguagem um recurso de Proxy.
+
+```javascript
+const negociacao = new Proxy(new Negociacao(new Date(), 2, 20), {
+  // target = Negociacao, prop = 'propriedade acessada', receiver = Proxy
+  get(target, prop, receiver) {
+    console.log(`A propriedade ${prop} caiu na armadilha!`);
+    //Acessamos a propriedade do objeto encapsulado através de colchetes com uma string correspondente ao nome da propriedade.
+    return target[prop];
+  },
+});
 ```
