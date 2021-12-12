@@ -176,3 +176,61 @@ class MensagemView extends View {
 - Use const sempre que possível
 - Utilize let apenas se a variável precisar receber novas atribuições.
 - Não use var, pois só tem escopo definido quando declarada dentro de uma função.
+
+### Driblando o tjis dinâmico de function
+
+Objetivo: A função passada no construtor de Negociacoes deve considerar a instância de NegociacaoController.
+
+- Criando uma variável de contexto.
+
+```javascript
+class NegociacaoController {
+    constructor() {
+        //Código anterior omitido
+        const self = this
+        this._negociacoes = new Negociacoes(function(model) {
+            console.log(this) // Instância de Negociacoes
+            self._negociacoesView.update(model) // Instância de NegociacaoController obtida através da variável auxiliar self
+        })
+        //Código posterior omitido
+    }
+}
+```
+
+- Utilizando a função call (presente em todas as functions) que reccebe um contexto e os parâmetros que a função terá como escopo.
+
+Na classe Negociacoes
+
+```javascript
+class Negociacoes {
+
+    // contexto = NegociacaoController, armadilha = function
+    constructor(contexto, armadilha) {
+        this._negociacoes = []
+        this._armadilha = armadilha
+        this._contexto = contexto
+        Object.freeze(this)
+    }
+
+    adiciona(negociacao) {
+        this._negociacoes.push(negociacao)
+        // A function armadilha terá MegociacaoController como contexto e Negociacoes como parâmetro
+        this._armadilha.call(this._contexto, this)
+    }
+}
+```
+
+Na classe NegociacaoController atrinuimos o this no primeiro parâmetro do constructor de Negociacoes.
+
+```javascript
+class NegociacaoController {
+    constructor() {
+        //Código anterior omitido
+        this._negociacoes = new Negociacoes(this, function(model) {
+            console.log(this) // this = NegociacaoController
+            this._negociacoesView.update(model) // this = NegociacaoController
+        })
+        //Código posterior omitido
+    }
+}
+```
