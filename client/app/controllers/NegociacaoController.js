@@ -7,12 +7,12 @@ class NegociacaoController {
         this._negociacoes = new Bind(
             new Negociacoes(),
             new NegociacoesView('#negociacoes'),
-            ['adiciona', 'esvazia']
+            'adiciona', 'esvazia'
         )
         this._mensagem = new Bind(
             new Mensagem(),
             new MensagemView('#mensagemView'),
-            ['texto']
+            'texto'
         )
     }
 
