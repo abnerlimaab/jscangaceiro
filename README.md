@@ -296,9 +296,19 @@ const negociacoes = new Proxy(new Negociacoes(), {
         target[prop].apply(target, arguments);
       };
     } else {
+      // Caso a prop seja um atributo, será retornado seu valor.
       return target[prop];
     }
   },
 });
 negociacoes.adiciona(new Negociacao(new Date(), 1, 100));
+```
+
+### O padrão de projeto FACTORY
+
+Auxilia na criação de objetos complexos encapsulando os detalhes de criação desses.
+
+
+```javascript
+
 ```
