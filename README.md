@@ -252,7 +252,9 @@ class NegociacaoController {
 
 Lidamos com Proxy como se ele fosse a instância do objeto que estamos querendo manipular. Para cada propriedade e método dessa instância o Proxy terá um correspondente. O ES6 já possui na própria linguagem um recurso de Proxy.
 
-#### GET
+#### Propriedades
+
+##### GET
 
 ```javascript
 const negociacao = new Proxy(new Negociacao(new Date(), 2, 20), {
@@ -265,7 +267,7 @@ const negociacao = new Proxy(new Negociacao(new Date(), 2, 20), {
 });
 ```
 
-#### SET
+##### SET
 
 ```javascript
 const negociacao = new Proxy(new Negociacao(new Date(), 2, 20), {
@@ -276,4 +278,27 @@ const negociacao = new Proxy(new Negociacao(new Date(), 2, 20), {
     return target[prop] == value;
   },
 });
+```
+
+#### Métodos
+
+```javascript
+const negociacoes = new Proxy(new Negociacoes(), {
+  get(target, prop, receiver) {
+    // Verifica se prop referencia uma function
+    if (
+      typeof target[prop] == typeof Function &&
+      ["adiciona", "esvazia"].includes(prop)
+    ) {
+      return function () {
+        console.log(`${prop} disparou a armadilha!`);
+        // Será retornada a function correspondente a propriedade e com apply definimos o escopo e a propriedade implicita arguments
+        target[prop].apply(target, arguments);
+      };
+    } else {
+      return target[prop];
+    }
+  },
+});
+negociacoes.adiciona(new Negociacao(new Date(), 1, 100));
 ```

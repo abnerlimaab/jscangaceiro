@@ -56,19 +56,19 @@
     <script src="app/ui/models/Mensagem.js"></script>
     <script src="app/app.js"></script>
     <script>
-        const negociacao = new Proxy(new Negociacao(new Date(), 2, 20), {
+        const negociacoes = new Proxy(new Negociacoes(), {
             get(target, prop, receiver) {
-                console.log(`A propriedade ${prop} caiu na armadilha!`)
-                //Acessamos a propriedade do objeto encapsulado através de colchetes com uma string correspondente ao nome da propriedade.
-                return target[prop]
-            },
-            set(target, prop, value, receiver) {
-                console.log(`${prop} guarda ${target[prop]}, receberá ${value}`)
-                return Reflect.set(target, prop, value)
+                if (typeof(target[prop]) == typeof(Function) && ['adiciona', 'esvazia'].includes(prop)) {
+                    return function() {
+                        console.log(`${prop} disparou a armadilha!`)
+                        target[prop].apply(target, arguments)
+                    }
+                } else {
+                    return target[prop]
+                }
             }
         })
-        negociacao._quantidade = 10
-        negociacao._valor = 100
+        negociacoes.adiciona(new Negociacao(new Date(), 1, 100))
     </script>
 </body>
 </html>
