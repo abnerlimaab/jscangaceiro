@@ -337,3 +337,12 @@ class ProxyFactory{
     }
 }
 ```
+
+### Requisições AJAX com o objeto XMLHttpRequest
+
+Estados
+* 0: Requisição ainda não iniciada
+* 1: Conexão com o servidor estabelecida
+* 2: Requisição recebida
+* 3: Processando requisição
+* 4: Requisição está concluída e a resposta está pronta

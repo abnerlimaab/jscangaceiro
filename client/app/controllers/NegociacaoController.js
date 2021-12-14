@@ -52,4 +52,19 @@ class NegociacaoController {
         this._negociacoes.esvaziar()
         this._mensagem.texto = 'Negociações apagadas com sucesso'
     }
+
+    importaNegociacoes() {
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', 'negociacoes/semana')
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    console.log('Obtendo as requisições do servidor')
+                } else {
+                    console.log('Não foi possível obter as requisições da semana')
+                }
+            }
+        }
+        xhr.send()
+    }
 }
