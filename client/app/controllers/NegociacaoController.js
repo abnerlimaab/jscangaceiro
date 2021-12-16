@@ -23,10 +23,10 @@ class NegociacaoController {
             this._negociacoes.adiciona(this._criaNegociacao())
             this._mensagem.texto = 'Negociação adicionada com sucesso'
             this._limpaFormulario()
-        } catch(erro) {
-            console.log(erro)            
+        } catch (erro) {
+            console.log(erro)
             console.log(erro.stack)
-            if(erro instanceof DataInvalidaException) {
+            if (erro instanceof DataInvalidaException) {
                 this._mensagem.texto = erro.message
             } else {
                 this._mensagem.texto = 'Um erro inesperado aconteceu. Entre em contato com o suporte.'
@@ -55,16 +55,15 @@ class NegociacaoController {
     }
 
     importaNegociacoes() {
-        //Caso a função que recebeu o callback consiga executar sua operação, no primeiro parâmetro do calback receberemos null e no segundo os dados resultantes da operação. A partir da ausência ou não de valor em null, lidamos com o sucesso ou fracasso da operação.
-        this._service.obterNegociacoesDaSemana((erro, negociacoes) => {
-            if(erro) {
-                this._mensagem.texto = 'Não foi possível obter as negociacoes da semana'
-                return
-            }
-            negociacoes.forEach(negociacao => {
-                this._negociacoes.adiciona(negociacao)
-                this._mensagem.texto = 'Negociações importadas com sucesso'
-            })
-        })
+        this._service.obterNegociacoesDaSemana()
+            .then(
+                //Callback Sucesso
+                negociacoes => {
+                    negociacoes.forEach(negociacoes => this._negociacoes.adiciona(negociacoes))
+                    this._mensagem.texto = 'Negociações importadas com sucesso'
+                },
+                //Callback Error
+                erro => this._mensagem.texto = erro
+            )
     }
 }

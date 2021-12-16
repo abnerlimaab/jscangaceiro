@@ -308,41 +308,60 @@ negociacoes.adiciona(new Negociacao(new Date(), 1, 100));
 
 Auxilia na criação de objetos complexos encapsulando os detalhes de criação desses.
 
-
 ```javascript
-class ProxyFactory{
-    static create(objeto, props, armadilha) {
-        return new Proxy(objeto, {
-            get(target, prop, receiver) {
-                if (ProxyFactory._ehFuncao(target[prop]) && props.includes(prop)) {
-                    return function() {
-                        console.log(`${prop} disparou a armadilha!`)
-                        target[prop].apply(target, arguments)
-                        armadilha(target)
-                    }
-                } else {
-                    return target[prop]
-                }
-            },
-            set(target, prop, value, receiver) {
-                const updated = Reflect.set(target, prop, value)
-                if(props.includes(prop)) armadilha(target)
-                return updated
-            }
-        })
-    }
+class ProxyFactory {
+  static create(objeto, props, armadilha) {
+    return new Proxy(objeto, {
+      get(target, prop, receiver) {
+        if (ProxyFactory._ehFuncao(target[prop]) && props.includes(prop)) {
+          return function () {
+            console.log(`${prop} disparou a armadilha!`);
+            target[prop].apply(target, arguments);
+            armadilha(target);
+          };
+        } else {
+          return target[prop];
+        }
+      },
+      set(target, prop, value, receiver) {
+        const updated = Reflect.set(target, prop, value);
+        if (props.includes(prop)) armadilha(target);
+        return updated;
+      },
+    });
+  }
 
-    static _ehFuncao(fn) {
-        return typeof(fn) == typeof(Function)
-    }
+  static _ehFuncao(fn) {
+    return typeof fn == typeof Function;
+  }
 }
 ```
 
 ### Requisições AJAX com o objeto XMLHttpRequest
 
 Estados
-* 0: Requisição ainda não iniciada
-* 1: Conexão com o servidor estabelecida
-* 2: Requisição recebida
-* 3: Processando requisição
-* 4: Requisição está concluída e a resposta está pronta
+
+- 0: Requisição ainda não iniciada
+- 1: Conexão com o servidor estabelecida
+- 2: Requisição recebida
+- 3: Processando requisição
+- 4: Requisição está concluída e a resposta está pronta
+
+### O padrão de projeto PROMISE
+
+Uma Promisse é o resultado futuro de uma ação podendo ser fruto de uma operação assíncrona. Atrravés da função then() interagimos com a Promisse. A função then() recebe como parâmetro duas callbacks. A primeira nos dá acesso ao retorno da função assíncrona, já a segunda, a possíveis erros.
+Métodos que retornam uma Promise não precisam receber um callback, evitando poluir sua interface de uso 'Callback Hell'. A função then() evita a condição if para tratar o sucesso ou fracasso quee são tratados separadamente nas funções de callback que recebe.
+
+```javascript
+this._service.obterNegociacoesDaSemana().then(
+  //Callback Sucesso
+  (negociacoes) => {
+    negociacoes.forEach((negociacoes) =>
+      this._negociacoes.adiciona(negociacoes)
+    );
+    this._mensagem.texto = "Negociações importadas com sucesso";
+  },
+  //Callback Error
+  (erro) => (this._mensagem.texto = erro)
+);
+```
