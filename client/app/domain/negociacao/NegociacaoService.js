@@ -1,21 +1,16 @@
 class NegociacaoService {
+    constructor() {
+        this._http = new HttpService()
+    }
     obterNegociacoesDaSemana() {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest()
-            xhr.open('GET', 'negociacoes/semana')
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        const negociacoes = JSON
-                            .parse(xhr.responseText)
-                            .map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor))
-                        resolve(negociacoes)
-                    } else {
-                        reject('Não foi possível obter as negociações da semana', null)
-                    }
-                }
-            }
-            xhr.send()
-        })
+        return this._http
+            .get('negociacoes/semana')
+            .then(dados => {
+                const negociacoes = dados.map(objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor))
+                return negociacoes
+            },
+                erro => {
+                    throw new Error('Não foi possível obter as negociações')
+                })
     }
 }
