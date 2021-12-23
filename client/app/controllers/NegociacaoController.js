@@ -54,11 +54,14 @@ class NegociacaoController {
         this._mensagem.texto = 'Negociações apagadas com sucesso'
     }
 
-    importaNegociacoes() {
+    importaNegociacoes() {  
         this._service
             .obterNegociacoesDoPeriodo()
                 .then(negociacoes => {
-                    negociacoes.forEach(negociacao => this._negociacoes.adiciona(negociacao))
+                    negociacoes
+                        .filter(novaNegociacao => this._negociacoes.paraArray()
+                            .some(negociacaoExistente => novaNegociacao.equals(negociacaoExistente)))
+                        .forEach(negociacao => this._negociacoes.adiciona(negociacao))
                     this._mensagem.texto = 'Negociações do período importadas com sucessoo'
                 })
                 .catch(erro => this._mensagem.texto = erro)
