@@ -15,6 +15,17 @@ class NegociacaoController {
             'texto'
         )
         this._service = new NegociacaoService()
+        this._init()
+    }
+    
+    _init() {
+        DaoFactory
+            .getNegociacaoDao()
+            .then(dao => dao.listaTodos())
+            .then(negociacoes => negociacoes.forEach(
+                negociacao => this._negociacoes.adiciona(negociacao)
+            ))
+            .catch(erro => this._mensagem.texto = erro)
     }
 
     adiciona(event) {
