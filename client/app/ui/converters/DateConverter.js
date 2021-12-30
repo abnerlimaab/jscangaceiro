@@ -1,4 +1,6 @@
-class DataConverter {
+import { DataInvalidaException } from './DataInvalidaException'
+
+export class DataConverter {
 
     constructor() {
         throw new Error('Essa classe não pode ser instanciada')

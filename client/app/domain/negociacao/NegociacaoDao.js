@@ -1,4 +1,6 @@
-class NegociacaoDao {
+import { Negociacao } from './Negociacao'
+
+export class NegociacaoDao {
     //O construtor da classe deverá receber uma conexão quando chamado.
     constructor(connection) {
         this._connection = connection

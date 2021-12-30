@@ -1,4 +1,7 @@
-class NegociacoesView extends View {
+import { View } from './View'
+import { DataConverter } from '../converters/DateConverter'
+
+export class NegociacoesView extends View {
 
     template(model) {
         return `
