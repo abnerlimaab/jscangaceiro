@@ -39,8 +39,14 @@ const ConnectionFactory = (() => {
                 openRequest.onsuccess = e => {
                     //Só será executado na primeira vez que a conexão for criada
                     connection = e.target.result
+                    //Guarda a função original close p´resente em todas as conexões no escopo de connection
+                    close = connection.close.bind(connection)
+                    //Utilizando o Monkey Pack, sobreescrevemos a função original close presente em todas as conexões para que seja emitido um erro ao tentar chamá-lo diretamente.
+                    connection.close = () => {
+                        throw new Error('Você não pode fechar diretamente a conexão')
+                    }
                     //Se a conexão for bem sucedida, será enviada como retorno através do resolve
-                    resolve(e.target.result)
+                    resolve(connection)
                 }
     
                 //Lógica a ser utilizada caso a conexão retorne um erro
@@ -66,6 +72,11 @@ const ConnectionFactory = (() => {
                     autoIncrement: true
                 })
             })
+        }
+
+        static closeConnection() {
+            //Chama a função close original
+            if(connection) close()
         }
     }
 }) ()
