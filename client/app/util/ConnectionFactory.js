@@ -1,6 +1,9 @@
 //Armazena os nomes das stores existentes. Fica fora da classe por não ser permitido declarar propriedades
 const stores = ['negociacoes']
 
+//Variável que auxilia na verificação se já há uma conexão ativa
+let connection = null
+
 //A mesma conexão será utilizada na aplicação inteira
 //Apesar de toda conexão possuir o mnétodo close(), não será permitido chamá-lo
 class ConnectionFactory {
@@ -13,6 +16,9 @@ class ConnectionFactory {
 
     static getConnection() {
         return new Promise((resolve, reject) => {
+
+            //Se uma conexão já foi criada, será retornada no resolve evitando percorrer novamente o processo de criação.
+            if(connection) return resolve(connection)
 
             //Triade de eventos para a abertura de uma conexão com IndexDB
 
@@ -27,14 +33,17 @@ class ConnectionFactory {
 
             //Lógica a ser utilizada caso a negociação obtenha sucesso
             openRequest.onsuccess = e => {
+                //Só será executado na primeira vez que a conexão for criada
+                connection = e.target.result
                 //Se a conexão for bem sucedida, será enviada como retorno através do resolve
                 resolve(e.target.result)
             }
 
             //Lógica a ser utilizada caso a conexão retorne um erro
             openRequest.onerror = e => {
+                console.log(e.target.error)
                 //Se a conexão obter erro, será enviado como retorno através de reject
-                reject(e.target.result)
+                reject(e.target.error.name)
             }
 
         })
